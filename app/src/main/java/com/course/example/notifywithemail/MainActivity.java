@@ -1,7 +1,5 @@
 package com.course.example.notifywithemail;
 
-import android.app.Activity;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.NotificationChannel;
 import android.content.Context;
@@ -40,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
                     NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Channel description");
             channel.setLightColor(Color.GREEN);
-            channel.enableVibration(true);
-            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
             mNotificationManager.createNotificationChannel(channel);
         }
 
@@ -54,8 +50,7 @@ public class MainActivity extends AppCompatActivity {
         notifyIntent.putExtra(Intent.EXTRA_TEXT, "We are under a Klingon attack. Fired Photon Torpedos.");
         notifyIntent.putExtra(Intent.EXTRA_SUBJECT, "Klingon Bird of Prey Attack");
 
-        //create pending intent to wrap intent so that it
-        //will fire when notification selected.
+        //create pending intent to wrap intent so that it will fire when notification selected.
         //The PendingIntent can only be used once.
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notifyIntent,
