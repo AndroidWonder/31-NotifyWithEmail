@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
             channel.setDescription("Channel description");
             channel.enableLights(true);
             channel.enableVibration(true);
+            channel.setVibrationPattern(new long[] { 100, 100 });
             channel.setLightColor(Color.GREEN);
             channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 
