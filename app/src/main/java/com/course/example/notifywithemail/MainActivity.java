@@ -1,5 +1,6 @@
 package com.course.example.notifywithemail;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.NotificationChannel;
 import android.content.Context;
@@ -9,7 +10,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
+
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,7 +20,9 @@ public class MainActivity extends AppCompatActivity {
 
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder notifyDetails = null;
-    private int SIMPLE_NOTFICATION_ID = 1;
+    public static final String ANDROID_CHANNEL_ID = "com.chikeandroid.tutsplustalerts.ANDROID";
+    public static final String ANDROID_CHANNEL_NAME = "ANDROID CHANNEL";
+    public static final int SIMPLE_NOTFICATION_ID = 101;
     private String contentTitle = "Email Notification";
     private String contentText = "Get to Email by clicking me";
     private String tickerText = "New Alert - Pull Down Status Bar";
@@ -29,17 +32,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button start = (Button) findViewById(R.id.btn_showsample);
+        Button cancel = (Button) findViewById(R.id.btn_clear);
+
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        //As of API 26 Notification Channels must be assigned to a channel
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("default",
-                    "Channel foobar",
+        //Notifications must be assigned to a channel
+            NotificationChannel channel = new NotificationChannel(ANDROID_CHANNEL_ID,
+                    ANDROID_CHANNEL_NAME,
                     NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Channel description");
+            channel.enableLights(true);
+            channel.enableVibration(true);
             channel.setLightColor(Color.GREEN);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+
             mNotificationManager.createNotificationChannel(channel);
-        }
+
 
         //create implicit intent for action when notification selected
         //from expanded notification screen
@@ -53,45 +62,28 @@ public class MainActivity extends AppCompatActivity {
         //create pending intent to wrap intent so that it will fire when notification selected.
         //The PendingIntent can only be used once.
         PendingIntent pendingIntent = PendingIntent.getActivity(
-                this, 0, notifyIntent,
-                PendingIntent.FLAG_ONE_SHOT);
+                this, 0, notifyIntent,0);
+            //    PendingIntent.FLAG_ONE_SHOT);
 
-        //set icon, text, and time on notification status bar
-        notifyDetails = new NotificationCompat.Builder(this, "default")
-                .setContentIntent(pendingIntent)
-
+        final Notification.Builder nb = new Notification.Builder(getApplicationContext(), ANDROID_CHANNEL_ID)
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
                 .setSmallIcon(R.drawable.droid)
-                .setAutoCancel(true)     //cancel Notification after clicking on it
-                //set Android to vibrate when notified
-                .setVibrate(new long[] {1000, 1000, 2000, 2000})
-
-                //set sound to play
-                .setSound(Uri.parse("android.resource://com.course.example.notify/"+R.raw.photon));
-
-        Button start = (Button) findViewById(R.id.btn_showsample);
-        Button cancel = (Button) findViewById(R.id.btn_clear);
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
 
         start.setOnClickListener(new OnClickListener() {
 
             public void onClick(View v) {
-
                 //notify() in response to button click.
-                mNotificationManager.notify(SIMPLE_NOTFICATION_ID,
-                        notifyDetails.build());
-
+                mNotificationManager.notify(SIMPLE_NOTFICATION_ID, nb.build());
             }
         });
 
         cancel.setOnClickListener(new OnClickListener() {
-
             public void onClick(View v) {
-
                 mNotificationManager.cancel(SIMPLE_NOTFICATION_ID);
             }
-
-
         });
     }
 }
