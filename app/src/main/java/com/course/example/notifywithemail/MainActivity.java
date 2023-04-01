@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         //create pending intent to wrap intent so that it will fire when notification selected.
         //The PendingIntent can only be used once.
         PendingIntent pendingIntent = PendingIntent.getActivity(
-                this, 0, notifyIntent,0);
+                this, 0, notifyIntent,PendingIntent.FLAG_IMMUTABLE);
             //    PendingIntent.FLAG_ONE_SHOT);
 
         final Notification.Builder nb = new Notification.Builder(getApplicationContext(), ANDROID_CHANNEL_ID)
